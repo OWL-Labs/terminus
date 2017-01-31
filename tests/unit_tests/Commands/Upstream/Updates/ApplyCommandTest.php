@@ -48,7 +48,7 @@ class ApplyCommandTest extends UpdatesCommandTest
             ->method('log')
             ->with(
                 $this->equalTo('warning'),
-                $this->equalTo('There are no available updates for this site.')
+                $this->equalTo('There are no available updates for the targeted environment(s).')
             );
 
         $this->environment->expects($this->never())
@@ -64,6 +64,7 @@ class ApplyCommandTest extends UpdatesCommandTest
     public function testApplyUpdates()
     {
         $this->environment->id = 'dev';
+        $site_name = 'site name';
 
         $upstream_data = (object)[
             'remote_head' => '2f1c945d01cd03250e2b6668ad77bf24f54a5a56',
@@ -120,14 +121,14 @@ class ApplyCommandTest extends UpdatesCommandTest
         $this->site->expects($this->once())
             ->method('get')
             ->with('name')
-            ->willReturn('my-site');
+            ->willReturn($site_name);
 
         $this->logger->expects($this->at(0))
             ->method('log')
             ->with(
                 $this->equalTo('notice'),
                 $this->equalTo('Applying {count} upstream update(s) to the {env} environment of {site_id}...'),
-                $this->equalTo(['count' => 2, 'env' => 'dev', 'site_id' => 'my-site'])
+                $this->equalTo(['count' => 2, 'env' => 'dev', 'site_id' => $site_name,])
             );
 
         $this->logger->expects($this->at(1))
@@ -137,7 +138,7 @@ class ApplyCommandTest extends UpdatesCommandTest
                 $this->equalTo('Applied upstream updates to "dev"')
             );
 
-        $out = $this->command->applyUpstreamUpdates('my-site', ['accept-upstream' => true, 'updatedb' => true,]);
+        $out = $this->command->applyUpstreamUpdates($site_name, ['accept-upstream' => true, 'updatedb' => true,]);
         $this->assertNull($out);
     }
 

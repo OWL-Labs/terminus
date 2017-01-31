@@ -3,7 +3,6 @@
 namespace Pantheon\Terminus\Commands\Upstream\Updates;
 
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
-use Pantheon\Terminus\Exceptions\TerminusException;
 
 /**
  * Class ListCommand
@@ -19,6 +18,8 @@ class ListCommand extends UpdatesCommand
      * @command upstream:updates:list
      *
      * @field-labels
+     *     site: Site
+     *     env: Environment
      *     hash: Commit ID
      *     datetime: Timestamp
      *     message: Message
@@ -26,27 +27,28 @@ class ListCommand extends UpdatesCommand
      * @return RowsOfFields
      *
      * @param string $site_env Site & development environment
-     *
-     * @throws TerminusException
+     * @option boolean $all Target all sites
      *
      * @usage <site>.<env> Displays a list of new code commits available from the upstream for <site>'s <env> environment.
+     * @usage --all Displays a list of new code commits available for every development environment of every site.
      */
-    public function listUpstreamUpdates($site_env)
+    public function listUpstreamUpdates($site_env = null, array $options = ['all' => false,])
     {
-        list(, $env) = $this->getSiteEnv($site_env, 'dev');
+        $all = isset($options['all']) ? $options['all'] : false;
+        $targets = $this->getUpdateTargets($site_env, $all);
 
         $data = [];
-        foreach ($this->getUpstreamUpdatesLog($env) as $commit) {
-            $data[] = [
-                'hash' => $commit->hash,
-                'datetime' => $commit->datetime,
-                'message' => $commit->message,
-                'author' => $commit->author,
-            ];
-        }
-
-        if (empty($data)) {
-            $this->log()->warning('There are no available updates for this site.');
+        foreach ($targets as $env) {
+            foreach ($this->getUpstreamUpdatesLog($env) as $commit) {
+                $data[] = [
+                    'site' => $env->getSite()->get('name'),
+                    'env' => $env->id,
+                    'hash' => $commit->hash,
+                    'datetime' => $commit->datetime,
+                    'message' => $commit->message,
+                    'author' => $commit->author,
+                ];
+            }
         }
 
         // Return the output data.

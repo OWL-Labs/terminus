@@ -43,7 +43,7 @@ class ListCommandTest extends UpdatesCommandTest
             ->method('log')
             ->with(
                 $this->equalTo('warning'),
-                $this->equalTo('There are no available updates for this site.')
+                $this->equalTo('There are no available updates for the targeted environment(s).')
             );
 
         $out = $this->command->listUpstreamUpdates('123');
@@ -55,6 +55,9 @@ class ListCommandTest extends UpdatesCommandTest
      */
     public function testListUpstreams()
     {
+        $site_name = 'site name';
+        $this->environment->id = 'dev';
+
         $upstream_data = (object)[
             'remote_head' => '2f1c945d01cd03250e2b6668ad77bf24f54a5a56',
             'ahead' => 1,
@@ -89,10 +92,16 @@ class ListCommandTest extends UpdatesCommandTest
         ];
         $this->upstream_status->method('getUpdates')
             ->willReturn($upstream_data);
+        $this->site->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo('name'))
+            ->willReturn($site_name);
 
         $out = $this->command->listUpstreamUpdates('123');
         $result = [
             [
+                'site' => $site_name,
+                'env' => $this->environment->id,
                 'hash' => '1bc423f65b3cc527b77d91da5c95eb240d9484f0',
                 'datetime' => '2016-06-16T04:21:14',
                 'message' => 'Update to Drupal 7.44. For more information, see ' .
@@ -100,6 +109,8 @@ class ListCommandTest extends UpdatesCommandTest
                 'author' => 'Pantheon Automation',
             ],
             [
+                'site' => $site_name,
+                'env' => $this->environment->id,
                 'hash' => '2f1c945d01cd03250e2b6668ad77bf24f54a5a56',
                 'datetime' => '2016-07-07T20:24:52',
                 'message' => 'Update to Drupal 7.50. For more information, see ' .
