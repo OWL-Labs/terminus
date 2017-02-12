@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This projec
 ## MASTER
 ### Added
 - Added an `--element=` option to `backup:list`. (#1563)
+- Added an `upstream:updates:status` command to reply whether an environment is up-to-date. (#1610)
 
 ### Changed
 - `self:cc` now acts to delete all files in the command cache directory. (#1569)
