@@ -39,7 +39,7 @@ class OrganizationUserMemberships extends TerminusCollection
     /**
      * Adds a user to this organization
      *
-     * @param string $uuid UUID of user user to add to this organization
+     * @param string $uuid UUID of user to add to this organization
      * @param string $role Role to assign to the new member
      * @return Workflow $workflow
      */

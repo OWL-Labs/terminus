@@ -52,7 +52,7 @@ class SiteOrganizationMembership extends TerminusModel implements ContainerAware
     public function getOrganization()
     {
         if (empty($this->organization)) {
-            $this->organization = $this->getContainer()->get(Organization::class, [$this->organization_data]);
+            $this->organization = $this->getContainer()->get(Organization::class, [$this->organization_data,]);
             $this->organization->memberships = [$this,];
         }
         return $this->organization;
@@ -76,7 +76,7 @@ class SiteOrganizationMembership extends TerminusModel implements ContainerAware
         $organization = $this->getOrganization();
         return [
             'org_id' => $organization->id,
-            'org_name' => $organization->get('profile')->name,
+            'org_name' => $organization->getName(),
             'site_id' => $this->site->id,
             'site_name' => $this->site->getName(),
         ];

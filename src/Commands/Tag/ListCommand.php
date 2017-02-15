@@ -24,7 +24,7 @@ class ListCommand extends TerminusCommand implements SiteAwareInterface
      * @aliases tags
      *
      * @param string $site_name Site name
-     * @param string $organization Organization name or UUID
+     * @param string $organization Organization label, name, or ID
      *
      * @return PropertyList
      *

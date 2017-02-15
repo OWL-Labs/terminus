@@ -53,7 +53,7 @@ class AddCommandTest extends OrgSiteCommandTest
 
         $this->org_memberships->expects($this->once())
             ->method('create')
-            ->with('org_id', 'team_member')
+            ->with($this->organization, 'team_member')
             ->willReturn($workflow);
 
         $this->logger->expects($this->at(0))

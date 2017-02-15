@@ -22,7 +22,7 @@ class AddCommand extends TerminusCommand implements SiteAwareInterface
      * @command tag:add
      *
      * @param string $site_name Site name
-     * @param string $organization Organization name or UUID
+     * @param string $organization Organization label, name, or ID
      * @param string $tag Tag
      *
      * @usage <site> <org> <tag> Adds the <tag> tag to <site> within <org>.

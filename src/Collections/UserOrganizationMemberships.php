@@ -38,9 +38,8 @@ class UserOrganizationMemberships extends UserOwnedCollection
             return $models[$id];
         }
         foreach ($models as $model) {
-            $org = $model->get('organization');
-            $org_profile = $org->profile;
-            if (in_array($id, [$org->id, $org_profile->name, $org_profile->machine_name,])) {
+            $org = $model->getOrganization();
+            if (in_array($id, [$org->id, $org->getName(), $org->getLabel(),])) {
                 return $model;
             }
         }

@@ -23,7 +23,7 @@ class RemoveCommand extends TerminusCommand implements SiteAwareInterface
      * @aliases tag:rm
      *
      * @param string $site_name Site name
-     * @param string $organization Organization name or UUID
+     * @param string $organization Organization label, name, or ID
      * @param string $tag Tag
      *
      * @usage <site> <org> <tag> Removes the <tag> tag from <site> within <org>.

@@ -27,7 +27,7 @@ class ListCommand extends TerminusCommand
      *     role: Role
      * @return RowsOfFields
      *
-     * @param string $organization Organization name or ID
+     * @param string $organization Organization label, name, or ID
      *
      * @usage <organization> Displays the list of users associated with <organization>.
      */

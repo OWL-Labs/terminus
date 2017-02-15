@@ -18,7 +18,7 @@ class RoleCommand extends TerminusCommand
      * @command org:people:role
      * @aliases org:ppl:role
      *
-     * @param string $organization Organization name or ID
+     * @param string $organization Organization label, name, or ID
      * @param string $member User UUID, email address, or full name
      * @param string $role [unprivileged|admin|team_member|developer] Role
      *

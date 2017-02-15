@@ -18,7 +18,7 @@ class RemoveCommand extends TerminusCommand
      * @command org:people:remove
      * @aliases org:people:rm org:ppl:remove org:ppl:rm
      *
-     * @param string $organization Organization name or ID
+     * @param string $organization Organization label, name, or ID
      * @param string $member User UUID, email address, or full name
      *
      * @usage <organization> <user> Removes the user, <user>, from <organization>.

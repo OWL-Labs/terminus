@@ -27,6 +27,7 @@ class ListCommand extends SiteCommand
      *
      * @option team Team-only filter
      * @option owner Owner filter; "me" or user UUID
+     * @option string $org Organization filter; "all" or organization name, label, or UUID
      * @option org Organization filter; "all" or organization UUID
      * @option name Name filter
      *

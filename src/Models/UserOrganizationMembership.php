@@ -39,7 +39,7 @@ class UserOrganizationMembership extends TerminusModel implements ContainerAware
     public function getOrganization()
     {
         if (empty($this->organization)) {
-            $this->organization = $this->getContainer()->get(Organization::class, [$this->get('organization')]);
+            $this->organization = $this->getContainer()->get(Organization::class, [$this->get('organization'),]);
             $this->organization->memberships = [$this,];
         }
         return $this->organization;

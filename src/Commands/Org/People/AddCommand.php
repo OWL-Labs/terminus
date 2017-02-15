@@ -18,7 +18,7 @@ class AddCommand extends TerminusCommand
      * @command org:people:add
      * @aliases org:ppl:add
      *
-     * @param string $organization Organization name or ID
+     * @param string $organization Organization label, name, or ID
      * @param string $email Email address
      * @param string $role [admin|unprivileged|team_member|developer] Role
      *

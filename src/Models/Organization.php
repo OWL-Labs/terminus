@@ -56,9 +56,19 @@ class Organization extends TerminusModel implements ContainerAwareInterface
      *
      * @return string
      */
-    public function getName()
+    public function getLabel()
     {
         return $this->get('profile')->name;
+    }
+
+    /**
+     * Get the machine name of the organization.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->get('profile')->machine_name;
     }
 
     /**
@@ -156,6 +166,6 @@ class Organization extends TerminusModel implements ContainerAwareInterface
      */
     public function serialize()
     {
-        return ['id' => $this->id, 'name' => $this->getName(),];
+        return ['id' => $this->id, 'name' => $this->getName(), 'label' => $this->getLabel(),];
     }
 }

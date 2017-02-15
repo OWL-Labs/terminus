@@ -24,7 +24,7 @@ class RemoveCommand extends TerminusCommand implements SiteAwareInterface
      * @aliases site:org:rm
      *
      * @param string $site Site name
-     * @param string $organization Organization name or UUID
+     * @param string $organization Organization label, name, or ID
      *
      * @throws TerminusException
      *

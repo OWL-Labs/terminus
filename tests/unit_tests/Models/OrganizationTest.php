@@ -41,6 +41,7 @@ class OrganizationTest extends ModelTestCase
      */
     public function testGetFeature()
     {
+        $org_id = 'org id';
         $data = [
             'change_management' => true,
             'multidev' => false,
@@ -49,12 +50,12 @@ class OrganizationTest extends ModelTestCase
         $this->request->expects($this->once())
             ->method('request')
             ->with(
-                'organizations/123/features',
+                "organizations/$org_id/features",
                 []
             )
             ->willReturn(['data' => $data,]);
 
-        $organization = new Organization((object)['id' => '123',]);
+        $organization = $this->createOrganization(['id' => $org_id,]);
         $organization->setRequest($this->request);
 
         $this->assertTrue($organization->getFeature('change_management'));
@@ -63,12 +64,23 @@ class OrganizationTest extends ModelTestCase
     }
 
     /**
+     * Tests the Organization::getLabel() function
+     */
+    public function testGetLabel()
+    {
+        $org_label = 'Organization Label';
+        $organization = $this->createOrganization(['label' => $org_label,]);
+        $out = $organization->getLabel();
+        $this->assertEquals($org_label, $out);
+    }
+
+    /**
      * Tests the Organization::getName() function
      */
     public function testGetName()
     {
         $org_name = 'organization name';
-        $organization = new Organization((object)['id' => '123', 'profile' => (object)['name' => $org_name,],]);
+        $organization = $this->createOrganization(['name' => $org_name,]);
         $out = $organization->getName();
         $this->assertEquals($org_name, $out);
     }
@@ -78,22 +90,23 @@ class OrganizationTest extends ModelTestCase
      */
     public function testGetSites()
     {
-        $organization = new Organization((object)['id' => '123',]);
+        $org_id = 'org id';
+        $organization = $this->createOrganization(['id' => $org_id,]);
 
         $model_data = [
             'a' => (object)[
                 'site' => new Site((object)['id' => 'abc', 'name' => 'Site A',]),
-                'organization_id' => '123',
+                'organization_id' => $org_id,
                 'role' => 'team_member',
             ],
             'b' => (object)[
                 'site' => new Site((object)['id' => 'bcd', 'name' => 'Site B',]),
-                'organization_id' => '123',
+                'organization_id' => $org_id,
                 'role' => 'team_member',
             ],
             'c' => (object)[
                 'site' => new Site((object)['id' => 'cde', 'name' => 'Site C',]),
-                'organization_id' => '123',
+                'organization_id' => $org_id,
                 'role' => 'team_member',
             ],
         ];
@@ -131,7 +144,7 @@ class OrganizationTest extends ModelTestCase
     public function testSiteMemberships()
     {
         $org_name = 'organization name';
-        $organization = new Organization((object)['id' => '123', 'profile' => (object)['name' => $org_name,],]);
+        $organization = $this->createOrganization(['name' => $org_name,]);
         $org_site_memberships = $this->getMockBuilder(OrganizationSiteMemberships::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -154,7 +167,7 @@ class OrganizationTest extends ModelTestCase
     public function testUserMemberships()
     {
         $org_name = 'organization name';
-        $organization = new Organization((object)['id' => '123', 'profile' => (object)['name' => $org_name,],]);
+        $organization = $this->createOrganization(['name' => $org_name,]);
         $org_user_memberships = $this->getMockBuilder(OrganizationUserMemberships::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -176,7 +189,7 @@ class OrganizationTest extends ModelTestCase
      */
     public function testGetUsers()
     {
-        $organization = new Organization((object)['id' => '123',]);
+        $organization = $this->createOrganization();
 
         $user_data = [
             'a' => ['id' => 'abc', 'email' => 'a@example.com', 'profile' => (object)['full_name' => 'User A',],],
@@ -218,7 +231,7 @@ class OrganizationTest extends ModelTestCase
     public function testGetWorkflows()
     {
         $org_name = 'organization name';
-        $organization = new Organization((object)['id' => '123', 'profile' => (object)['name' => $org_name,],]);
+        $organization = $this->createOrganization(['name' => $org_name,]);
         $workflows = $this->getMockBuilder(Workflows::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -240,11 +253,26 @@ class OrganizationTest extends ModelTestCase
      */
     public function testSerialize()
     {
-        $org_id = 'org id';
-        $org_name = 'organization name';
-        $expected = ['id' => $org_id, 'name' => $org_name,];
-        $organization = new Organization((object)['id' => $org_id, 'profile' => (object)['name' => $org_name,],]);
+        $expected = ['id' => 'org id', 'name' => 'organization name', 'label' => 'Organization Label',];
+        $organization = $this->createOrganization($expected);
         $out = $organization->serialize();
         $this->assertEquals($expected, $out);
+    }
+
+    /**
+     * Creates an Organization object
+     *
+     * @param array $options Elements as follow
+     *     string id
+     *     string name
+     *     string label
+     * @return Organization
+     */
+    protected function createOrganization(array $options = ['id' => null, 'name' => null, 'label' => null,])
+    {
+        $id = isset($options['id']) ? $options['id'] : null;
+        $name = isset($options['name']) ? $options['name'] : null;
+        $label = isset($options['label']) ? $options['label'] : null;
+        return new Organization((object)['id' => $id, 'profile' => (object)['machine_name' => $name, 'name' => $label,],]);
     }
 }

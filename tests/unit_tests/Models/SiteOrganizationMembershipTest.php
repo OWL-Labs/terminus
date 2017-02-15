@@ -61,7 +61,7 @@ class SiteOrganizationMembershipTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $this->org_data = [
             'id' => 'org id',
-            'name' => 'org name',
+            'profile' => (object)['machine_name' => 'org name',],
         ];
         $this->organization = $this->getMockBuilder(Organization::class)
             ->disableOriginalConstructor()
@@ -147,7 +147,7 @@ class SiteOrganizationMembershipTest extends \PHPUnit_Framework_TestCase
         $site_name = 'site name';
         $expected = [
             'org_id' => $this->organization->id,
-            'org_name' => $this->org_data['name'],
+            'org_name' => $this->org_data['profile']->machine_name,
             'site_id' => $this->site->id,
             'site_name' => $site_name,
         ];
@@ -160,9 +160,9 @@ class SiteOrganizationMembershipTest extends \PHPUnit_Framework_TestCase
             )
             ->willReturn($this->organization);
         $this->organization->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo('profile'))
-            ->willReturn((object)$this->org_data);
+            ->method('getName')
+            ->with()
+            ->willReturn($this->org_data['profile']->machine_name);
         $this->site->expects($this->once())
             ->method('getName')
             ->with()
