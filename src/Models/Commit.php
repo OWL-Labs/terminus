@@ -8,6 +8,10 @@ namespace Pantheon\Terminus\Models;
  */
 class Commit extends TerminusModel
 {
+    /**
+     * @var string
+     */
+    public static $pretty_name = 'commit';
 
     public function serialize()
     {

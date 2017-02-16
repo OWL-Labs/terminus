@@ -22,10 +22,6 @@ class OrganizationUserMembershipTest extends \PHPUnit_Framework_TestCase
      */
     protected $collection;
     /**
-     * @var Container
-     */
-    protected $container;
-    /**
      * @var OrganizationUserMembership
      */
     protected $model;
@@ -41,10 +37,6 @@ class OrganizationUserMembershipTest extends \PHPUnit_Framework_TestCase
      * @var string
      */
     protected $role;
-    /**
-     * @var User
-     */
-    protected $user;
     /**
      * @var object
      */
@@ -68,23 +60,16 @@ class OrganizationUserMembershipTest extends \PHPUnit_Framework_TestCase
         $this->collection = $this->getMockBuilder(OrganizationUserMemberships::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->container = $this->getMockBuilder(Container::class)
-            ->disableOriginalConstructor()
-            ->getMock();
         $this->org_data = (object)['id' => 'user_id',];
         $this->organization = $this->getMockBuilder(Organization::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->role = 'role';
-        $this->user = $this->getMockBuilder(User::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->user_data = (object)[
+        $this->user_data = [
             'id' => 'user ID',
             'profile' => (object)['firstname' => 'first name', 'lastname' => 'last name',],
             'email' => 'handle@domain.ext',
         ];
-        $this->user->id = $this->user_data->id;
         $this->workflow = $this->getMockBuilder(Workflow::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -101,7 +86,6 @@ class OrganizationUserMembershipTest extends \PHPUnit_Framework_TestCase
             (object)['user' => $this->user_data, 'role' => $this->role,],
             ['collection' => $this->collection,]
         );
-        $this->model->setContainer($this->container);
     }
 
     /**
@@ -109,13 +93,7 @@ class OrganizationUserMembershipTest extends \PHPUnit_Framework_TestCase
      */
     public function testDelete()
     {
-        $this->container->expects($this->once())
-            ->method('get')
-            ->with(
-                $this->equalTo(User::class),
-                $this->equalTo([$this->user_data,])
-            )
-            ->willReturn($this->user);
+        $user = $this->expectGetUser();
         $this->organization->expects($this->once())
             ->method('getWorkflows')
             ->with()
@@ -124,7 +102,7 @@ class OrganizationUserMembershipTest extends \PHPUnit_Framework_TestCase
             ->method('create')
             ->with(
                 'remove_organization_user_membership',
-                ['params' => ['user_id' => $this->user_data->id,],]
+                ['params' => ['user_id' => $user->id,],]
             )
             ->willReturn($this->workflow);
 
@@ -142,20 +120,28 @@ class OrganizationUserMembershipTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the OrganizationUserMembership::getReferences() function.
+     */
+    public function testGetReferences()
+    {
+        $user = $this->expectGetUser();
+        $user->expects($this->once())
+            ->method('getReferences')
+            ->with()
+            ->willReturn($this->user_data);
+
+        $out = $this->model->getReferences();
+        $this->assertEquals(array_merge([$this->model->id,], $this->user_data), $out);
+    }
+
+    /**
      * Tests the OrganizationUserMembership::getUser() function
      */
     public function testGetUser()
     {
-        $this->container->expects($this->once())
-            ->method('get')
-            ->with(
-                $this->equalTo(User::class),
-                $this->equalTo([$this->user_data,])
-            )
-            ->willReturn($this->user);
-
+        $user = $this->expectGetUser();
         $out = $this->model->getUser();
-        $this->assertEquals($this->user, $out);
+        $this->assertEquals($user, $out);
     }
 
     /**
@@ -164,28 +150,22 @@ class OrganizationUserMembershipTest extends \PHPUnit_Framework_TestCase
     public function testSerialize()
     {
         $expected = [
-            'id' => $this->user_data->id,
-            'first_name' => $this->user_data->profile->firstname,
-            'last_name' => $this->user_data->profile->lastname,
-            'email' => $this->user_data->email,
+            'id' => $this->user_data['id'],
+            'first_name' => $this->user_data['profile']->firstname,
+            'last_name' => $this->user_data['profile']->lastname,
+            'email' => $this->user_data['email'],
             'role' => $this->role,
         ];
 
-        $this->container->expects($this->once())
-            ->method('get')
-            ->with(
-                $this->equalTo(User::class),
-                $this->equalTo([$this->user_data,])
-            )
-            ->willReturn($this->user);
-        $this->user->expects($this->at(0))
+        $user = $this->expectGetUser();
+        $user->expects($this->at(0))
             ->method('get')
             ->with($this->equalTo('profile'))
-            ->willReturn($this->user_data->profile);
-        $this->user->expects($this->at(1))
+            ->willReturn($this->user_data['profile']);
+        $user->expects($this->at(1))
             ->method('get')
             ->with($this->equalTo('email'))
-            ->willReturn($this->user_data->email);
+            ->willReturn($this->user_data['email']);
 
         $out = $this->model->serialize();
         $this->assertEquals($expected, $out);
@@ -196,15 +176,7 @@ class OrganizationUserMembershipTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetRole()
     {
-        $role = 'role';
-
-        $this->container->expects($this->once())
-            ->method('get')
-            ->with(
-                $this->equalTo(User::class),
-                $this->equalTo([$this->user_data,])
-            )
-            ->willReturn($this->user);
+        $user = $this->expectGetUser();
         $this->organization->expects($this->once())
             ->method('getWorkflows')
             ->with()
@@ -213,11 +185,38 @@ class OrganizationUserMembershipTest extends \PHPUnit_Framework_TestCase
             ->method('create')
             ->with(
                 $this->equalTo('update_organization_user_membership'),
-                $this->equalTo(['params' => ['user_id' => $this->user->id, 'role' => $role,],])
+                $this->equalTo(['params' => ['user_id' => $user->id, 'role' => $this->role,],])
             )
             ->willReturn($this->workflow);
 
-        $out = $this->model->setRole($role);
+        $out = $this->model->setRole($this->role);
         $this->assertEquals($this->workflow, $out);
+    }
+
+    /**
+     * Prepares the test case for the getUser() function.
+     *
+     * @return User The user object getUser() will return
+     */
+    protected function expectGetUser()
+    {
+        $container = $this->getMockBuilder(Container::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $user = $this->getMockBuilder(User::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $user->id = $this->user_data['id'];
+
+        $container->expects($this->once())
+            ->method('get')
+            ->with(
+                $this->equalTo(User::class),
+                $this->equalTo([$this->user_data,])
+            )
+            ->willReturn($user);
+
+        $this->model->setContainer($container);
+        return $user;
     }
 }

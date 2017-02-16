@@ -2,7 +2,6 @@
 
 namespace Pantheon\Terminus\Collections;
 
-use Pantheon\Terminus\Exceptions\TerminusNotFoundException;
 use Pantheon\Terminus\Models\OrganizationUserMembership;
 
 /**
@@ -47,34 +46,9 @@ class OrganizationUserMemberships extends TerminusCollection
     {
         $workflow = $this->organization->getWorkflows()->create(
             'add_organization_user_membership',
-            ['params' => ['user_email' => $uuid, 'role' => $role,]]
+            ['params' => ['user_email' => $uuid, 'role' => $role,],]
         );
         return $workflow;
-    }
-
-    /**
-     * Retrieves models by either user ID, email address, or full name
-     *
-     * @param string $id Either a user ID, email address, or full name
-     * @return OrganizationUserMembership
-     * @throws TerminusNotFoundException
-     */
-    public function get($id)
-    {
-        $models = $this->getMembers();
-        if (isset($models[$id])) {
-            return $models[$id];
-        }
-        foreach ($models as $model) {
-            $user = $model->getUser();
-            if (in_array($id, [$user->id, $user->get('email'), $user->getProfile()->full_name])) {
-                return $model;
-            }
-        }
-        throw new TerminusNotFoundException(
-            'An organization member identified by "{id}" could not be found.',
-            compact('id')
-        );
     }
 
     /**

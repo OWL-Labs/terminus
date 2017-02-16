@@ -18,6 +18,10 @@ class OrganizationUserMembership extends TerminusModel implements ContainerAware
      */
     public $organization;
     /**
+     * @var string
+     */
+    public static $pretty_name = 'organization-user membership';
+    /**
      * @var User
      */
     public $user;
@@ -58,6 +62,14 @@ class OrganizationUserMembership extends TerminusModel implements ContainerAware
     public function getOrganization()
     {
         return $this->organization;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getReferences()
+    {
+        return array_merge(parent::getReferences(), $this->getUser()->getReferences());
     }
 
     /**

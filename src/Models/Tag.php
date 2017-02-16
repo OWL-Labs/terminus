@@ -12,6 +12,10 @@ class Tag extends TerminusModel
      * @var OrganizationSiteMembership
      */
     public $org_site_membership;
+    /**
+     * @var string
+     */
+    public static $pretty_name = 'tag';
 
     /**
      * @inheritdoc

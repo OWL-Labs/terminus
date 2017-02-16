@@ -9,6 +9,10 @@ namespace Pantheon\Terminus\Models;
 class Redis extends TerminusModel
 {
     /**
+     * @var string
+     */
+    public static $pretty_name = 'Redis';
+    /**
      * @var Site
      */
     public $site;

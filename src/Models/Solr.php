@@ -5,6 +5,10 @@ namespace Pantheon\Terminus\Models;
 class Solr extends TerminusModel
 {
     /**
+     * @var string
+     */
+    public static $pretty_name = 'Solr';
+    /**
      * @var Site
      */
     public $site;

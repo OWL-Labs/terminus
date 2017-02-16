@@ -50,6 +50,10 @@ class Environment extends TerminusModel implements ConfigAwareInterface, Contain
      */
     protected $lock;
     /**
+     * @var string
+     */
+    public static $pretty_name = 'environment';
+    /**
      * @var Site
      */
     public $site;

@@ -38,17 +38,8 @@ class Domains extends EnvironmentOwnedCollection
     }
 
     /**
-     * Changes the value of the hydration property
-     *
-     * @param mixed $value Value to set the hydration property to
-     * @return Domains
+     * @return string
      */
-    public function setHydration($value)
-    {
-        $this->hydrate = $value;
-        return $this;
-    }
-
     public function getUrl()
     {
         return parent::getUrl() . '?hydrate=' . $this->hydrate;
@@ -68,5 +59,17 @@ class Domains extends EnvironmentOwnedCollection
         } catch (TerminusNotFoundException $e) {
             return false;
         }
+    }
+
+    /**
+     * Changes the value of the hydration property
+     *
+     * @param mixed $value Value to set the hydration property to
+     * @return Domains
+     */
+    public function setHydration($value)
+    {
+        $this->hydrate = $value;
+        return $this;
     }
 }

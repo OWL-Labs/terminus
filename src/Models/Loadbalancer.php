@@ -9,6 +9,11 @@ namespace Pantheon\Terminus\Models;
 class Loadbalancer extends TerminusModel
 {
     /**
+     * @var string
+     */
+    public static $pretty_name = 'loadbalancer';
+
+    /**
      * @return boolean
      */
     public function isSSL()

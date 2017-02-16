@@ -10,6 +10,10 @@ use Pantheon\Terminus\Exceptions\TerminusException;
  */
 class MachineToken extends TerminusModel
 {
+    /**
+     * @var string
+     */
+    public static $pretty_name = 'machine token';
 
     /**
      * Object constructor

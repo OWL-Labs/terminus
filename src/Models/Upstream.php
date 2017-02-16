@@ -9,12 +9,9 @@ namespace Pantheon\Terminus\Models;
 class Upstream extends TerminusModel
 {
     /**
-     * @inheritdoc
+     * @var string
      */
-    public function __construct($attributes, array $options = [])
-    {
-        parent::__construct($attributes, $options);
-    }
+    public static $pretty_name = 'upstream';
 
     /**
      * @inheritdoc
@@ -22,6 +19,14 @@ class Upstream extends TerminusModel
     public function __toString()
     {
         return "{$this->id}: {$this->get('url')}";
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getReferences()
+    {
+        return [$this->id, $this->get('longname'), $this->get('machinename'),];
     }
 
     /**

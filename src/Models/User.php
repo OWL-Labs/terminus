@@ -24,6 +24,10 @@ class User extends TerminusModel implements ConfigAwareInterface, ContainerAware
     use ContainerAwareTrait;
 
     /**
+     * @var string
+     */
+    public static $pretty_name = 'user';
+    /**
      * @var \stdClass
      * @todo Wrap this in a proper class.
      */
@@ -105,6 +109,14 @@ class User extends TerminusModel implements ConfigAwareInterface, ContainerAware
             )
         );
         return $organizations;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getReferences()
+    {
+        return [$this->id, $this->getProfile()->full_name, $this->get('email'),];
     }
 
     /**

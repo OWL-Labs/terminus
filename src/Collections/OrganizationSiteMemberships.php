@@ -4,7 +4,6 @@ namespace Pantheon\Terminus\Collections;
 
 use Pantheon\Terminus\Models\Organization;
 use Pantheon\Terminus\Exceptions\TerminusException;
-use Pantheon\Terminus\Exceptions\TerminusNotFoundException;
 use Pantheon\Terminus\Models\OrganizationSiteMembership;
 
 /**
@@ -47,34 +46,9 @@ class OrganizationSiteMemberships extends TerminusCollection
      */
     public function create($site)
     {
-        $workflow = $this->getOrganization()->getWorkflows()->create(
+        return $this->getOrganization()->getWorkflows()->create(
             'add_organization_site_membership',
             ['params' => ['site_id' => $site->id, 'role' => 'team_member',],]
-        );
-        return $workflow;
-    }
-
-    /**
-     * Retrieves the model with site of the given UUID or name
-     *
-     * @param string $id UUID or name of desired site membership instance
-     * @return OrganizationSiteMembership
-     * @throws TerminusNotFoundException
-     */
-    public function get($id)
-    {
-        $models = $this->getMembers();
-        if (isset($models[$id])) {
-            return $models[$id];
-        }
-        foreach ($models as $membership) {
-            if (in_array($id, [$membership->getSite()->id, $membership->getSite()->get('name')])) {
-                return $membership;
-            }
-        }
-        throw new TerminusNotFoundException(
-            'A site identified by {id} could not be found belonging to this organization.',
-            compact('id')
         );
     }
 
@@ -84,6 +58,14 @@ class OrganizationSiteMemberships extends TerminusCollection
     public function getOrganization()
     {
         return $this->organization;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getReferences()
+    {
+        return array_merge([$this->id,], $this->getSite()->getReferences());
     }
 
     /**

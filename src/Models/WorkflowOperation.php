@@ -9,6 +9,11 @@ namespace Pantheon\Terminus\Models;
 class WorkflowOperation extends TerminusModel
 {
     /**
+     * @var string
+     */
+    public static $pretty_name = 'workflow operation';
+
+    /**
      * @inheritdoc
      */
     public function __toString()

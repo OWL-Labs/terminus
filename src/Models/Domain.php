@@ -12,6 +12,10 @@ class Domain extends TerminusModel
      * @var Environment
      */
     public $environment;
+    /**
+     * @var string
+     */
+    public static $pretty_name = 'domain';
 
     /**
      * Object constructor

@@ -272,7 +272,7 @@ class BackupsTest extends CollectionTestCase
         $this->assertEquals($out->get('task_id'), $data->task_id);
         $this->assertEquals($out->get('filename'), $data->filename);
 
-        $this->setExpectedException(TerminusException::class, "Cannot find a backup named not-there.");
+        $this->setExpectedException(TerminusException::class, "Could not find a backup identified by not-there.");
         $out = $backups->getBackupByFileName('not-there');
         $this->assertNull($out);
     }

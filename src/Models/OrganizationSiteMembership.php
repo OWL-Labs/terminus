@@ -19,6 +19,10 @@ class OrganizationSiteMembership extends TerminusModel implements ContainerAware
      */
     public $organization;
     /**
+     * @var string
+     */
+    public static $pretty_name = 'organization-site membership';
+    /**
      * @var Site
      */
     public $site;
@@ -53,7 +57,7 @@ class OrganizationSiteMembership extends TerminusModel implements ContainerAware
     public function __toString()
     {
         $org = $this->getOrganization();
-        return "{$org->id}: {$org->get('profile')->name}";
+        return "{$org->id}: {$org->getName()}";
     }
 
     /**
@@ -65,8 +69,24 @@ class OrganizationSiteMembership extends TerminusModel implements ContainerAware
     {
         return $this->getOrganization()->getWorkflows()->create(
             'remove_organization_site_membership',
-            ['params' => ['site_id' => $this->getSite()->get('id'),],]
+            ['params' => ['site_id' => $this->getSite()->id,],]
         );
+    }
+
+    /**
+     * @return Organization
+     */
+    public function getOrganization()
+    {
+        return $this->organization;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getReferences()
+    {
+        return array_merge(parent::getReferences(), $this->getSite()->getReferences());
     }
 
     /**
@@ -81,13 +101,5 @@ class OrganizationSiteMembership extends TerminusModel implements ContainerAware
             $this->site->tags->fetch((array)$this->tags_data);
         }
         return $this->site;
-    }
-
-    /**
-     * @return Organization
-     */
-    public function getOrganization()
-    {
-        return $this->organization;
     }
 }

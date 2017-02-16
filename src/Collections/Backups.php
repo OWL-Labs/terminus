@@ -98,16 +98,7 @@ class Backups extends EnvironmentOwnedCollection
      */
     public function getBackupByFileName($filename)
     {
-        $matches = array_filter(
-            $this->all(),
-            function ($backup) use ($filename) {
-                return $backup->get('filename') === $filename;
-            }
-        );
-        if (count($matches) === 0) {
-            throw new TerminusNotFoundException('Cannot find a backup named {filename}.', compact('filename'));
-        }
-        return array_shift($matches);
+        return $this->get($filename);
     }
 
     /**

@@ -12,6 +12,10 @@ class Lock extends TerminusModel
      * @var Environment
      */
     public $environment;
+    /**
+     * @var string
+     */
+    public static $pretty_name = 'lock';
 
     /**
      * @inheritdoc

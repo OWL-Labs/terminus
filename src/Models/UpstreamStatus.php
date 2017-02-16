@@ -12,6 +12,10 @@ class UpstreamStatus extends TerminusModel
      * @var Environment
      */
     public $environment;
+    /**
+     * @var string
+     */
+    public static $pretty_name = 'upstream status';
 
     /**
      * @inheritdoc

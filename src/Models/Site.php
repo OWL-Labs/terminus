@@ -39,6 +39,10 @@ class Site extends TerminusModel implements ConfigAwareInterface, ContainerAware
      */
     public $org_memberships;
     /**
+     * @var string
+     */
+    public static $pretty_name = 'site';
+    /**
      * @var Redis
      */
     public $redis;
@@ -278,6 +282,14 @@ class Site extends TerminusModel implements ConfigAwareInterface, ContainerAware
             $this->redis = $this->getContainer()->get(Redis::class, [null, ['site' => $this,]]);
         }
         return $this->redis;
+    }
+
+    /**
+     * @return array
+     */
+    public function getReferences()
+    {
+        return [$this->id, $this->getName(), $this->get('label'),];
     }
 
     /**

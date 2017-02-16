@@ -14,6 +14,10 @@ class UserSiteMembership extends TerminusModel implements ContainerAwareInterfac
     use ContainerAwareTrait;
 
     /**
+     * @var string
+     */
+    public static $pretty_name = 'user-site membership';
+    /**
      * @var Site
      */
     public $site;
@@ -46,12 +50,20 @@ class UserSiteMembership extends TerminusModel implements ContainerAwareInterfac
     }
 
     /**
+     * @return string[]
+     */
+    public function getReferences()
+    {
+        return array_merge(parent::getReferences(), $this->getSite()->getReferences());
+    }
+
+    /**
      * @return Site
      */
     public function getSite()
     {
         if (!$this->site) {
-            $this->site = $this->getContainer()->get(Site::class, [$this->site_info]);
+            $this->site = $this->getContainer()->get(Site::class, [$this->site_info,]);
             $this->site->memberships = [$this,];
         }
         return $this->site;

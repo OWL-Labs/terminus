@@ -18,6 +18,10 @@ abstract class TerminusModel implements RequestAwareInterface
      */
     public $id;
     /**
+     * @var string
+     */
+    public static $pretty_name = 'terminus model';
+    /**
      * @var array Arguments for fetching this model's information
      */
     protected $args = [];
@@ -114,6 +118,16 @@ abstract class TerminusModel implements RequestAwareInterface
     protected function parseAttributes($data)
     {
         return $data;
+    }
+
+    /**
+     * Returns the fields by which this model can be found.
+     *
+     * @return array
+     */
+    public function getReferences()
+    {
+        return [$this->id,];
     }
 
     /**

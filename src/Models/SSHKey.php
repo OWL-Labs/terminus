@@ -11,6 +11,10 @@ use Pantheon\Terminus\Exceptions\TerminusException;
 class SSHKey extends TerminusModel
 {
     /**
+     * @var string
+     */
+    public static $pretty_name = 'SSH key';
+    /**
      * @var User
      */
     public $user;

@@ -12,10 +12,15 @@ use League\Container\ContainerAwareTrait;
 class UserOrganizationMembership extends TerminusModel implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
+
     /**
      * @var Organization
      */
     public $organization;
+    /**
+     * @var string
+     */
+    public static $pretty_name = 'user-organization membership';
     /**
      * @var User
      */
@@ -43,6 +48,14 @@ class UserOrganizationMembership extends TerminusModel implements ContainerAware
             $this->organization->memberships = [$this,];
         }
         return $this->organization;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getReferences()
+    {
+        return array_merge(parent::getReferences(), $this->getOrganization()->getReferences());
     }
 
     /**

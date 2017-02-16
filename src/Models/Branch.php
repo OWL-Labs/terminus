@@ -9,6 +9,10 @@ namespace Pantheon\Terminus\Models;
 class Branch extends TerminusModel
 {
     /**
+     * @var string
+     */
+    public static $pretty_name = 'branch';
+    /**
      * @var Site
      */
     public $site;

@@ -14,6 +14,10 @@ class NewRelic extends TerminusModel implements ConfigAwareInterface
     use ConfigAwareTrait;
 
     /**
+     * @var string
+     */
+    public static $pretty_name = 'New Relic';
+    /**
      * @var Site
      */
     public $site;

@@ -189,17 +189,7 @@ class Sites extends TerminusCollection implements SessionAwareInterface
                 );
             }
         } else {
-            // If we have a list of sites already then look through it for the given site.
-            if (isset($this->models[$id])) {
-                // Search by id
-                $site = $this->models[$id];
-            } else {
-                // Search by name
-                $list = $this->listing('name', 'id');
-                if (isset($list[$id])) {
-                    $site = $this->models[$list[$id]];
-                }
-            }
+            $site = parent::get($id);
         }
 
         return $site;

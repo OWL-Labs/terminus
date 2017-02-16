@@ -13,10 +13,15 @@ use Pantheon\Terminus\Exceptions\TerminusException;
 class Backup extends TerminusModel implements ConfigAwareInterface
 {
     use ConfigAwareTrait;
+
     /**
      * @var environment
      */
     public $environment;
+    /**
+     * @var string
+     */
+    public static $pretty_name = 'backup';
 
     /**
      * @inheritdoc
@@ -83,6 +88,14 @@ class Backup extends TerminusModel implements ConfigAwareInterface
     {
         preg_match("/.*_(.*)/", $this->get('folder'), $automation_match);
         return (isset($automation_match[1]) && ($automation_match[1] == 'automated')) ? 'automated' : 'manual';
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getReferences()
+    {
+        return [$this->id, $this->get('filename'),];
     }
 
     /**

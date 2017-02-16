@@ -17,6 +17,10 @@ class Organization extends TerminusModel implements ContainerAwareInterface
     use ContainerAwareTrait;
 
     /**
+     * @var string
+     */
+    public static $pretty_name = 'organization';
+    /**
      * @var OrganizationSiteMemberships
      */
     public $site_memberships;
@@ -59,6 +63,14 @@ class Organization extends TerminusModel implements ContainerAwareInterface
     public function getName()
     {
         return $this->get('profile')->name;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getReferences()
+    {
+        return $this->serialize();
     }
 
     /**

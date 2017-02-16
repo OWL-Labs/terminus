@@ -9,6 +9,11 @@ namespace Pantheon\Terminus\Models;
 class PaymentMethod extends TerminusModel
 {
     /**
+     * @var string
+     */
+    public static $pretty_name = 'payment method';
+
+    /**
      * @inheritdoc
      */
     public function serialize()
